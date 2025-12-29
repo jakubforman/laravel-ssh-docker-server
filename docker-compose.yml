@@ -1,12 +1,12 @@
 services:
   app:
     build:
-      context: ./runtimes/8.2
+      context: ./runtimes/8.4
       dockerfile: Dockerfile
       args:
         WWWGROUP: '${WWWGROUP:-1000}'
         POSTGRES_CLIENT: true
-    image: laravel-ssh-server:8.2
+    image: laravel-ssh-server:8.4
     ports:
       - "8080:80"   # Web
       - "2222:22"   # SSH/SFTP pro PHP Deployer, a další části
@@ -14,9 +14,6 @@ services:
       - ./dev.tripocket.cz:/var/www/html
     networks:
       - dev-tripocket
-    environment:
-      - DB_HOST=pgsql    # Laravel se připojí k Postgresu pomocí názvu služby
-      - REDIS_HOST=redis
     depends_on:
       - pgsql
       - redis
@@ -24,9 +21,9 @@ services:
   pgsql:
     image: 'postgis/postgis:15-3.3-alpine'
     environment:
-      - POSTGRES_USER=laravel
-      - POSTGRES_PASSWORD=heslo
-      - POSTGRES_DB=eshop_db
+      POSTGRES_DB: laravel
+      POSTGRES_USER: laravel
+      POSTGRES_PASSWORD: password
     volumes:
       - 'dev-tripocket-pgsql:/var/lib/postgresql/data'
     networks:
