@@ -7,12 +7,18 @@ RUN apt-get update && apt-get install -y \
     supervisor \
     git \
     unzip \
+    zlib1g-dev \
+    libzip-dev \
+    libpq-dev \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
-    curl
+    curl \
+    ffmpeg \
+    nano
 
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo_pgsql pgsql mbstring exif pcntl bcmath gd
+
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
