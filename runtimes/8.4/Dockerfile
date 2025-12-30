@@ -2,6 +2,7 @@ FROM php:8.4-fpm
 
 # 1. User NAS ID settings (for DSM folders)
 ARG NAS_UID=1024
+ARG WWWGROUP=100
 
 # 2. Installing system packages
 RUN apt-get update && apt-get install -y \
@@ -32,7 +33,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # 5. User and SSH settings (Secure)
 # Creating a deployer without a password
-RUN useradd -u ${NAS_UID} -g www-data -m -s /bin/bash deployer
+RUN useradd -u ${NAS_UID} -g ${WWWGROUP} -m -s /bin/bash deployer
 
 # Creating a directory for SSH keys with strict permissions
 RUN mkdir -p /home/deployer/.ssh && \
@@ -61,10 +62,10 @@ RUN ln -s /etc/nginx/sites-available/laravel.conf /etc/nginx/sites-enabled/
 RUN chmod 755 /var/www && \
     mkdir -p /var/www/html/storage/logs && \
     mkdir -p /var/log/supervisor && \
-    chown -R deployer:www-data /var/www/html && \
+    chown -R ${NAS_UID}:${WWWGROUP} /var/www/html && \
     chmod -R 775 /var/www/html && \
     touch /home/deployer/.ssh/authorized_keys && \
-    chown deployer:www-data /home/deployer/.ssh/authorized_keys && \
+    chown ${NAS_UID}:${WWWGROUP} /home/deployer/.ssh/authorized_keys && \
     chmod 600 /home/deployer/.ssh/authorized_keys
 
 # 9. Supervisor config file
