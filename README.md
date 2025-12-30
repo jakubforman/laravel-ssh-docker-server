@@ -14,6 +14,14 @@ Contains Dockerfiles for Laravel applications, optimized for various PHP version
 - Set up all other environment variables (some of the examples are in [.env.example](.env.example))
 - Click `Deploy the stack`
 
+### Volume folder
+
+![nas.png](showcase/nas.png)
+
+### Portainer environments setup
+
+![portainer.png](showcase/portainer.png)
+
 ## Domain DNS setup
 
 - Set `CNAME` record for your domain to point to your NAS IP address or Synology NAS domain (e.g., `your-nas.synology.me`)
