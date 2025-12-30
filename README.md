@@ -10,6 +10,8 @@ Contains Dockerfiles for Laravel applications, optimized for various PHP version
 - Set repository reference `refs/heads/main`
 - Add environment variables (e.g., `APP_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` ...)
 - Add environment variable `APP_PATH` - in NAS create new folder for your project (domain name pattern) and set it as `APP_PATH` (e.g., `/volume1/docker/example.com`)
+- Add environment variable `SSH_KEY_PATH` - set your own key path (e.g., `/volume1/docker/example.com/.ssh/id_deployer.pub`)
+- Set up all other environment variables (some of the examples are in [.env.example](.env.example))
 - Click `Deploy the stack`
 
 ## Domain DNS setup

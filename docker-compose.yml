@@ -4,16 +4,17 @@ services:
       context: ./runtimes/8.4
       dockerfile: Dockerfile
       args:
-        NAS_UID: '${CURRENT_UID:-1024}'
+        NAS_UID: '${NAS_UID:-1024}'
         WWWGROUP: '${WWWGROUP:-1000}'
         POSTGRES_CLIENT: true
     image: laravel-ssh-server:8.4
-    hostname: '${APP_HOSTNAME:-localhost}'
+    hostname: '${APP_HOSTNAME}'
     ports:
       - "${APP_PORT:-8080}:80"   # Web
       - "${SSH_PORT:-2222}:22"   # SSH/SFTP pro PHP Deployer, a další části
     volumes:
       - "${APP_PATH:-./html}:/var/www/html"
+      - "${SSH_KEY_PATH}:/home/deployer/.ssh/authorized_keys:ro"
     networks:
       - dev-tripocket
     depends_on:
