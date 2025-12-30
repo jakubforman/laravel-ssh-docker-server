@@ -8,7 +8,7 @@ services:
         POSTGRES_CLIENT: true
     image: laravel-ssh-server:8.4
     hostname: '${APP_HOSTNAME:-localhost}'
-    domainname: '${APP_DOMAIN}'s
+    domainname: '${APP_DOMAIN}'
     ports:
       - "${APP_PORT:-8080}:80"   # Web
       - "${SSH_PORT:-2222}:22"   # SSH/SFTP pro PHP Deployer, a další části
