@@ -1,6 +1,6 @@
 FROM php:8.4-fpm
 
-# 1. Přidán nginx
+# 1. Instalace balíčků
 RUN apt-get update && apt-get install -y \
     nginx \
     openssh-server \
@@ -18,15 +18,13 @@ RUN apt-get update && apt-get install -y \
     nano
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp
-
 RUN docker-php-ext-install pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip
-
 RUN pecl install redis && docker-php-ext-enable redis
 
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 2. SSH nastavení (opraveno s -p)
+# 2. SSH a Bash Prompt
 RUN mkdir -p /var/run/sshd
 RUN echo 'root:root' | chpasswd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -37,7 +35,12 @@ RUN rm /etc/nginx/sites-enabled/default
 COPY nginx.conf /etc/nginx/sites-available/laravel.conf
 RUN ln -s /etc/nginx/sites-available/laravel.conf /etc/nginx/sites-enabled/
 
-# 4. Supervisor konfigurace
+# 4. Vytvoření složek pro logy dopředu
+RUN mkdir -p /var/www/html/storage/logs && \
+    mkdir -p /var/log/supervisor && \
+    touch /var/www/html/storage/logs/worker.log
+
+# 5. Supervisor konfigurace
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 WORKDIR /var/www/html
