@@ -11,7 +11,7 @@ services:
       - "8080:80"   # Web
       - "2222:22"   # SSH/SFTP pro PHP Deployer, a další části
     volumes:
-      - ./dev.tripocket.cz:/var/www/html
+      - "${APP_PATH:-./html}:/var/www/html"
     networks:
       - dev-tripocket
     depends_on:
@@ -21,9 +21,9 @@ services:
   pgsql:
     image: 'postgis/postgis:15-3.3-alpine'
     environment:
-      POSTGRES_DB: '${DB_DATABASE}:laravel'
-      POSTGRES_USER: '${DB_USERNAME}:sail'
-      POSTGRES_PASSWORD: '${DB_PASSWORD}:password'
+      POSTGRES_DB: '${DB_DATABASE:-laravel}'
+      POSTGRES_USER: '${DB_USERNAME:-sail}'
+      POSTGRES_PASSWORD: '${DB_PASSWORD:-password}'
     volumes:
       - 'dev-tripocket-pgsql:/var/lib/postgresql/data'
     networks:
