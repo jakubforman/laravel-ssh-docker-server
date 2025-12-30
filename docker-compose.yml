@@ -21,9 +21,9 @@ services:
   pgsql:
     image: 'postgis/postgis:15-3.3-alpine'
     environment:
-      POSTGRES_DB: laravel
-      POSTGRES_USER: sail
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: '${DB_DATABASE}:laravel'
+      POSTGRES_USER: '${DB_USERNAME}:sail'
+      POSTGRES_PASSWORD: '${DB_PASSWORD}:password'
     volumes:
       - 'dev-tripocket-pgsql:/var/lib/postgresql/data'
     networks:
