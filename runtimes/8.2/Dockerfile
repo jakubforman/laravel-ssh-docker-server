@@ -30,6 +30,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN mkdir -p /var/run/sshd
 RUN echo 'root:root' | chpasswd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN echo 'export PS1="\u@\H:\w\\$ "' >> /root/.bashrc
 
 # 3. Odstraníme výchozí web Nginxu a vytvoříme si vlastní konfiguraci
 RUN rm /etc/nginx/sites-enabled/default
