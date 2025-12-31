@@ -17,14 +17,16 @@ RUN apt-get update && apt-get install -y \
     libpng-dev libwebp-dev libjpeg62-turbo-dev libfreetype6-dev \
     libonig-dev \
     libxml2-dev \
+    libicu-dev \
     curl \
     ffmpeg \
     nano \
+    acl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # 3. Installing PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp
-RUN docker-php-ext-install pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip
+RUN docker-php-ext-install pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip intl
 RUN pecl install redis && docker-php-ext-enable redis
 
 # 4. Installing Node.js and Composer
@@ -60,7 +62,7 @@ RUN ln -s /etc/nginx/sites-available/laravel.conf /etc/nginx/sites-enabled/
 
 # 8. Rules and folders
 RUN chmod 755 /var/www && \
-    mkdir -p /var/www/html/storage/logs && \
+    mkdir -p /var/www/html/shared/storage/logs && \
     mkdir -p /var/log/supervisor && \
     chown -R ${NAS_UID}:${WWWGROUP} /var/www/html && \
     chmod -R 775 /var/www/html && \
