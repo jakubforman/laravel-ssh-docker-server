@@ -37,6 +37,16 @@ Contains Dockerfiles for Laravel applications, optimized for various PHP version
 - Static IP address
 - Port forwarding (same port as in reverse proxy)
 
+## Local docker-specific settings (without Deployer)
+
+
 ## Deployer specific setup - [Deployer](https://deployer.org/)
 
 Don't need anything to set up in portainer
+
+### DSM Folder (NAS folder) setup - volume setup
+
+> Pokud toto není nastaveno, Laravel a SSH server spadne v závislosti na supervisoru, který potřebuje tyto složky.
+
+- Nastavit oprávnění `everybody` pro šlokžku, na kterou je mapován pojekt
+- Vytvořit šložky `shared`, `releases` + `current` - pozor current je link!

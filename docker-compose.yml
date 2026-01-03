@@ -10,6 +10,8 @@ services:
         APP_PUBLIC_PATH: '${APP_PUBLIC_PATH:-/var/www/html/current/public}'
         WORKER_LOG_PATH: '${WORKER_LOG_PATH:-/var/www/html/shared/storage/logs/worker.log}'
     image: laravel-ssh-server:8.4
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
     hostname: '${APP_HOSTNAME}'
     environment:
       - SSH_PUBLIC_KEY=${SSH_PUBLIC_KEY}
