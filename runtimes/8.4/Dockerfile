@@ -1,5 +1,12 @@
 FROM php:8.4-fpm
 
+# Výchozí nastavení na root, pokud neřekneš jinak
+ARG APP_PUBLIC_PATH=/var/www/html/current/public
+ARG WORKER_LOG_PATH=/var/www/html/shared/storage/logs/worker.log
+
+ENV WEB_ROOT=${APP_PUBLIC_PATH}
+ENV WORKER_LOG=${WORKER_LOG_PATH}
+
 # 1. User NAS ID settings (for DSM folders)
 ARG NAS_UID=1024
 ARG WWWGROUP=100
@@ -35,7 +42,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # 5. User and SSH settings (Secure)
 # Creating a deployer without a password
-RUN useradd -u ${NAS_UID} -g ${WWWGROUP} -m -s /bin/bash deployer
+RUN useradd -u ${NAS_UID} -g ${WWWGROUP} -m -s /bin/bash deployer && \
+    usermod -a -G ${WWWGROUP} www-data && \
+    usermod -a -G www-data deployer
 
 # Creating a directory for SSH keys with strict permissions
 RUN mkdir -p /home/deployer/.ssh && \
@@ -61,17 +70,24 @@ COPY nginx.conf /etc/nginx/sites-available/laravel.conf
 RUN ln -s /etc/nginx/sites-available/laravel.conf /etc/nginx/sites-enabled/
 
 # 8. Rules and folders
-RUN chmod 755 /var/www && \
-    mkdir -p /var/www/html/shared/storage/logs && \
-    mkdir -p /var/log/supervisor && \
-    chown -R ${NAS_UID}:${WWWGROUP} /var/www/html && \
-    chmod -R 775 /var/www/html && \
+RUN chown deployer:${WWWGROUP} /var/www/html && \
+    chmod 775 /var/www/html && \
+    chmod g+s /var/www/html && \
+    mkdir -p ${WEB_ROOT} && \
+    mkdir -p /home/deployer/.ssh && \
     touch /home/deployer/.ssh/authorized_keys && \
-    chown ${NAS_UID}:${WWWGROUP} /home/deployer/.ssh/authorized_keys && \
+    chown -R deployer:${WWWGROUP} /home/deployer/.ssh && \
+    chmod 700 /home/deployer/.ssh && \
     chmod 600 /home/deployer/.ssh/authorized_keys
 
-# 9. Supervisor config file
+
+# 10. Supervisor config file
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# 9. Úprava konfigů (Nginx + Supervisor pro Worker i Pulse)
+RUN sed -i "s|root /var/www/html/current/public;|root ${WEB_ROOT};|g" /etc/nginx/sites-available/laravel.conf && \
+    sed -i "s|/var/www/html/shared/storage/logs/worker.log|${WORKER_LOG}|g" /etc/supervisor/conf.d/supervisord.conf && \
+    sed -i "s|/var/www/html/shared/storage/logs/pulse.log|$(dirname ${WORKER_LOG})/pulse.log|g" /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 80 22
 

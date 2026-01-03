@@ -36,3 +36,7 @@ Contains Dockerfiles for Laravel applications, optimized for various PHP version
 
 - Static IP address
 - Port forwarding (same port as in reverse proxy)
+
+## Deployer specific setup - [Deployer](https://deployer.org/)
+
+Don't need anything to set up in portainer

@@ -7,6 +7,8 @@ services:
         NAS_UID: '${NAS_UID:-1026}'
         WWWGROUP: '${WWWGROUP:-100}'
         POSTGRES_CLIENT: true
+        APP_PUBLIC_PATH: '${APP_PUBLIC_PATH:-/var/www/html/current/public}'
+        WORKER_LOG_PATH: '${WORKER_LOG_PATH:-/var/www/html/shared/storage/logs/worker.log}'
     image: laravel-ssh-server:8.4
     hostname: '${APP_HOSTNAME}'
     environment:
