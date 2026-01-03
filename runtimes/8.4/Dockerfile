@@ -70,11 +70,9 @@ COPY nginx.conf /etc/nginx/sites-available/laravel.conf
 RUN ln -s /etc/nginx/sites-available/laravel.conf /etc/nginx/sites-enabled/
 
 # 8. Rules and folders
-RUN chown deployer:${WWWGROUP} /var/www/html && \
+RUN chown -R deployer:${WWWGROUP} /var/www/html && \
     chmod 775 /var/www/html && \
     chmod g+s /var/www/html && \
-    setfacl -d -m g::rwx /var/www/html && \
-    setfacl -d -m u::rwx /var/www/html && \
     mkdir -p /home/deployer/.ssh && \
     touch /home/deployer/.ssh/authorized_keys && \
     chown -R deployer:${WWWGROUP} /home/deployer/.ssh && \
