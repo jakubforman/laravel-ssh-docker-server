@@ -33,8 +33,9 @@ RUN apt-get update && apt-get install -y \
 
 # 3. Installing PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp
-RUN docker-php-ext-install pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip intl
+RUN docker-php-ext-install pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip intl curl xml dom
 RUN pecl install redis && docker-php-ext-enable redis
+COPY php.ini /usr/local/etc/php/conf.d/laravel-php.ini
 
 # 4. Installing Node.js and Composer
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs
