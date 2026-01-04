@@ -12,6 +12,7 @@ ARG NAS_UID=1024
 ARG WWWGROUP=100
 
 # 2. Installing system packages
+# 2. Installing system packages
 RUN apt-get update && apt-get install -y \
     nginx \
     openssh-server \
@@ -25,6 +26,8 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libicu-dev \
+    libcurl4-openssl-dev \
+    pkg-config \
     curl \
     ffmpeg \
     nano \
